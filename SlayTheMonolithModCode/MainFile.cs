@@ -1,6 +1,8 @@
+using BaseLib.Config;
 using Godot;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Modding;
+using SlayTheMonolithMod.SlayTheMonolithModCode.Config;
 
 namespace SlayTheMonolithMod.SlayTheMonolithModCode
 {
@@ -17,6 +19,8 @@ namespace SlayTheMonolithMod.SlayTheMonolithModCode
             Harmony harmony = new(ModId);
 
             harmony.PatchAll();
+
+            ModConfigRegistry.Register(ModId, new StoryConfig());
         }
     }
 }

@@ -19,10 +19,6 @@ public sealed class Lancelier : CustomMonsterModel, ILocalizationProvider
     public override string CustomVisualPath =>
         "res://SlayTheMonolithMod/scenes/creature_visuals/lancelier.tscn";
 
-    // BaseLib 3.1.2 only auto-registers scene→NCreatureVisuals conversion for types in
-    // CustomContentDictionary.RegisteredTypes. CustomEncounterModel self-registers; CustomMonsterModel
-    // does not, so without this override the .tscn root stays a Node2D and MonsterModel.CreateVisuals'
-    // Instantiate<NCreatureVisuals> throws InvalidCastException.
     public override NCreatureVisuals? CreateCustomVisuals() =>
         CustomVisualPath is { } path
             ? NodeFactory<NCreatureVisuals>.CreateFromScene(path)
