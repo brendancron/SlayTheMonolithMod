@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="EventFolder" id="{f16d465c-e36c-479f-9d2a-8bcc885f64db}">
+		<property name="name">
+			<value>slaythemonolithmod</value>
+		</property>
+		<relationship name="folder">
+			<destination>{07048f85-139a-4ba1-bc61-add489dc87db}</destination>
+		</relationship>
+	</object>
+</objects>
