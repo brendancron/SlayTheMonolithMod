@@ -1,0 +1,6 @@
+{
+  "SLAYTHEMONOLITHMOD.mod_title": "Slay the Monolith",
+  "SLAYTHEMONOLITHMOD-STORYLINE.title": "Storyline",
+  "SLAYTHEMONOLITHMOD-ALTERNATE_STORYLINE_ENABLED.title": "Alternate Storyline",
+  "SLAYTHEMONOLITHMOD-ALTERNATE_STORYLINE_ENABLED.hover.desc": "When enabled, new runs use this mod's alternate biomes and encounters instead of the vanilla acts. Already-started runs are unaffected; the choice is locked in when the run begins."
+}

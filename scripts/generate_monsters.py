@@ -34,7 +34,9 @@ monsters = [
     ('Stalact',     'Stalact',     'DROP_MOVE',     'Drop',          30, 36, 9,  'Stone'),
     ('Troubadour',  'Troubadour',  'BALLAD_MOVE',   'Ballad',        22, 28, 6,  'Magic'),
     ('Veilleur',    'Veilleur',    'VIGIL_MOVE',    'Vigil',         28, 34, 7,  'Armor'),
-    ('Volester',    'Volester',    'SHARD_THROW',   'Shard Throw',   30, 36, 8,  'Stone'),
+    # Lancelier, Portier, Abbest, Volester are hand-authored (easy-pool encounters)
+    # so they're excluded from this generator. Their .cs files live alongside
+    # under Monsters/ but with custom movesets.
 ]
 
 repo = r'C:\Users\Brendan\source\repos\SlayTheMonolithMod'
@@ -99,17 +101,21 @@ public sealed class {Cls} : CustomMonsterModel, ILocalizationProvider
 
 ENC_TPL = """using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.Acts;
 using MegaCrit.Sts2.Core.Rooms;
+using SlayTheMonolithMod.SlayTheMonolithModCode.Acts;
 using SlayTheMonolithMod.SlayTheMonolithModCode.Monsters;
 
 namespace SlayTheMonolithMod.SlayTheMonolithModCode.Encounters;
 
-public sealed class {Cls}Normal : CustomEncounterModel
+public sealed class {Cls}Normal : CustomEncounterModel, ILocalizationProvider
 {{
     public {Cls}Normal() : base(RoomType.Monster) {{ }}
 
-    public override bool IsValidForAct(ActModel act) => act is Overgrowth;
+    public override bool IsValidForAct(ActModel act) => act is TheContinent;
+
+    public List<(string, string)>? Localization => new EncounterLoc(
+        Title: "{Display}",
+        LossText: "Bested by the {Display}.");
 
     public override IEnumerable<MonsterModel> AllPossibleMonsters => new MonsterModel[]
     {{
@@ -162,7 +168,7 @@ for (cls, disp, move_id, move_lbl, min_hp, max_hp, dmg, sfx) in monsters:
         Cls=cls, lower=lower, MinHp=min_hp, MaxHp=max_hp, Dmg=dmg, Sfx=sfx,
         Display=disp, MoveId=move_id, MoveLabel=move_lbl,
     )
-    enc_src = ENC_TPL.format(Cls=cls)
+    enc_src = ENC_TPL.format(Cls=cls, Display=disp)
     scn_src = SCN_TPL.format(Cls=cls, lower=lower, short=short, uid=uid)
     with open(os.path.join(mons_dir, f'{cls}.cs'), 'w', encoding='utf-8') as f:
         f.write(mon_src)

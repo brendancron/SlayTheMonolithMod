@@ -11,3 +11,10 @@ packages/
 *.user
 Directory.Build.props
 .claude/settings.local.json
+# FMOD Studio generated/local-state directories — recreated when you open the
+# project. Build/ contains the bank artifacts which are committed separately
+# under audio/ once they're known-good.
+fmod_project/.cache/
+fmod_project/.unsaved/
+fmod_project/.user/
+fmod_project/Build/
