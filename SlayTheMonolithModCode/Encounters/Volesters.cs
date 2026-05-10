@@ -6,20 +6,25 @@ using SlayTheMonolithMod.SlayTheMonolithModCode.Monsters;
 
 namespace SlayTheMonolithMod.SlayTheMonolithModCode.Encounters;
 
-public sealed class VolesterNormal : CustomEncounterModel
+public sealed class Volesters : CustomEncounterModel
 {
-    public VolesterNormal() : base(RoomType.Monster) { }
+    public Volesters() : base(RoomType.Monster) { }
 
     public override bool IsValidForAct(ActModel act) => act is TheContinent;
+
+    public override bool IsWeak => true;
 
     public override IEnumerable<MonsterModel> AllPossibleMonsters => new MonsterModel[]
     {
         ModelDb.Monster<Volester>(),
     };
 
+    // Three Volesters at 5 dmg each = 15 unblocked per turn against ~14-18 HP each.
     protected override IReadOnlyList<(MonsterModel, string?)> GenerateMonsters() =>
         new List<(MonsterModel, string?)>
         {
+            (ModelDb.Monster<Volester>().ToMutable(), null),
+            (ModelDb.Monster<Volester>().ToMutable(), null),
             (ModelDb.Monster<Volester>().ToMutable(), null),
         };
 }

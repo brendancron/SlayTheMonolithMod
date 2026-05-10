@@ -34,7 +34,9 @@ monsters = [
     ('Stalact',     'Stalact',     'DROP_MOVE',     'Drop',          30, 36, 9,  'Stone'),
     ('Troubadour',  'Troubadour',  'BALLAD_MOVE',   'Ballad',        22, 28, 6,  'Magic'),
     ('Veilleur',    'Veilleur',    'VIGIL_MOVE',    'Vigil',         28, 34, 7,  'Armor'),
-    ('Volester',    'Volester',    'SHARD_THROW',   'Shard Throw',   30, 36, 8,  'Stone'),
+    # Lancelier, Portier, Abbest, Volester are hand-authored (easy-pool encounters)
+    # so they're excluded from this generator. Their .cs files live alongside
+    # under Monsters/ but with custom movesets.
 ]
 
 repo = r'C:\Users\Brendan\source\repos\SlayTheMonolithMod'

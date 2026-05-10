@@ -6,20 +6,22 @@ using SlayTheMonolithMod.SlayTheMonolithModCode.Monsters;
 
 namespace SlayTheMonolithMod.SlayTheMonolithModCode.Encounters;
 
-public sealed class LancelierNormal : CustomEncounterModel
+public sealed class PortierFight : CustomEncounterModel
 {
-    public LancelierNormal() : base(RoomType.Monster) { }
+    public PortierFight() : base(RoomType.Monster) { }
 
     public override bool IsValidForAct(ActModel act) => act is TheContinent;
 
+    public override bool IsWeak => true;
+
     public override IEnumerable<MonsterModel> AllPossibleMonsters => new MonsterModel[]
     {
-        ModelDb.Monster<Lancelier>(),
+        ModelDb.Monster<Portier>(),
     };
 
     protected override IReadOnlyList<(MonsterModel, string?)> GenerateMonsters() =>
         new List<(MonsterModel, string?)>
         {
-            (ModelDb.Monster<Lancelier>().ToMutable(), null),
+            (ModelDb.Monster<Portier>().ToMutable(), null),
         };
 }

@@ -50,10 +50,11 @@ public sealed class TheContinent : CustomActModel, ILocalizationProvider
     public override IEnumerable<EventModel> AllEvents => Array.Empty<EventModel>();
 
     // GenerateRooms expects at least one boss/elite/weak encounter per act, otherwise
-    // _rooms.Boss ends up null and AssetPaths crashes during act-asset preload. Until
-    // we author Clair-Obscur boss/elite/weak encounters, borrow vanilla Overgrowth's
-    // so the act has the structural variety it needs. The 25 mod normal encounters
-    // are auto-injected by BaseLib's AddCustomEncounters postfix on top of this list.
+    // _rooms.Boss ends up null and AssetPaths crashes during act-asset preload. Bosses
+    // and elites still borrow from vanilla Overgrowth as placeholders — replace them
+    // when authored. The four easy-pool encounters (LancelierFight, PortierFight,
+    // Volesters, Abbests) and the 21 hard-pool *Normal encounters are auto-injected
+    // by BaseLib's AddCustomEncounters postfix on top of this list.
     public override IEnumerable<EncounterModel> GenerateAllEncounters() => new EncounterModel[]
     {
         ModelDb.Encounter<VantomBoss>(),
@@ -62,9 +63,5 @@ public sealed class TheContinent : CustomActModel, ILocalizationProvider
         ModelDb.Encounter<BygoneEffigyElite>(),
         ModelDb.Encounter<ByrdonisElite>(),
         ModelDb.Encounter<PhrogParasiteElite>(),
-        ModelDb.Encounter<NibbitsWeak>(),
-        ModelDb.Encounter<SlimesWeak>(),
-        ModelDb.Encounter<ShrinkerBeetleWeak>(),
-        ModelDb.Encounter<FuzzyWurmCrawlerWeak>(),
     };
 }

@@ -6,11 +6,13 @@ using SlayTheMonolithMod.SlayTheMonolithModCode.Monsters;
 
 namespace SlayTheMonolithMod.SlayTheMonolithModCode.Encounters;
 
-public sealed class AbbestNormal : CustomEncounterModel
+public sealed class Abbests : CustomEncounterModel
 {
-    public AbbestNormal() : base(RoomType.Monster) { }
+    public Abbests() : base(RoomType.Monster) { }
 
     public override bool IsValidForAct(ActModel act) => act is TheContinent;
+
+    public override bool IsWeak => true;
 
     public override IEnumerable<MonsterModel> AllPossibleMonsters => new MonsterModel[]
     {
@@ -20,6 +22,7 @@ public sealed class AbbestNormal : CustomEncounterModel
     protected override IReadOnlyList<(MonsterModel, string?)> GenerateMonsters() =>
         new List<(MonsterModel, string?)>
         {
+            (ModelDb.Monster<Abbest>().ToMutable(), null),
             (ModelDb.Monster<Abbest>().ToMutable(), null),
         };
 }

@@ -13,8 +13,8 @@ public sealed class Volester : CustomMonsterModel, ILocalizationProvider
 {
     private const string MoveIdConst = "SHARD_THROW";
 
-    public override int MinInitialHp => 30;
-    public override int MaxInitialHp => 36;
+    public override int MinInitialHp => 14;
+    public override int MaxInitialHp => 18;
 
     public override string CustomVisualPath =>
         "res://SlayTheMonolithMod/scenes/creature_visuals/volester.tscn";
@@ -32,7 +32,7 @@ public sealed class Volester : CustomMonsterModel, ILocalizationProvider
         Name: "Volester",
         MoveTitles: new[] { (MoveIdConst, "Shard Throw") });
 
-    private int MoveDamage => 8;
+    private int MoveDamage => 5;
 
     protected override MonsterMoveStateMachine GenerateMoveStateMachine()
     {
