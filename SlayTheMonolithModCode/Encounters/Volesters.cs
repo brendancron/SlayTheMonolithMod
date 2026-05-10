@@ -6,11 +6,15 @@ using SlayTheMonolithMod.SlayTheMonolithModCode.Monsters;
 
 namespace SlayTheMonolithMod.SlayTheMonolithModCode.Encounters;
 
-public sealed class Volesters : CustomEncounterModel
+public sealed class Volesters : CustomEncounterModel, ILocalizationProvider
 {
     public Volesters() : base(RoomType.Monster) { }
 
     public override bool IsValidForAct(ActModel act) => act is TheContinent;
+
+    public List<(string, string)>? Localization => new EncounterLoc(
+        Title: "Volesters",
+        LossText: "Cut down by a hail of shards.");
 
     public override bool IsWeak => true;
 

@@ -6,11 +6,15 @@ using SlayTheMonolithMod.SlayTheMonolithModCode.Monsters;
 
 namespace SlayTheMonolithMod.SlayTheMonolithModCode.Encounters;
 
-public sealed class RamasseurNormal : CustomEncounterModel
+public sealed class RamasseurNormal : CustomEncounterModel, ILocalizationProvider
 {
     public RamasseurNormal() : base(RoomType.Monster) { }
 
     public override bool IsValidForAct(ActModel act) => act is TheContinent;
+
+    public List<(string, string)>? Localization => new EncounterLoc(
+        Title: "Ramasseur",
+        LossText: "Bested by the Ramasseur.");
 
     public override IEnumerable<MonsterModel> AllPossibleMonsters => new MonsterModel[]
     {

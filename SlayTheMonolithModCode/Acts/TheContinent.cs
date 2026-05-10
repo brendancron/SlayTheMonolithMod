@@ -1,17 +1,18 @@
 using BaseLib.Abstracts;
 using Godot;
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.Encounters;
 using MegaCrit.Sts2.Core.Models.Events;
 using MegaCrit.Sts2.Core.Random;
 using MegaCrit.Sts2.Core.Rooms;
+using SlayTheMonolithMod.SlayTheMonolithModCode.Encounters;
 
 namespace SlayTheMonolithMod.SlayTheMonolithModCode.Acts;
 
 // First biome of the alternate storyline. Visuals + audio currently piggyback on
-// vanilla Overgrowth so the wiring can be validated before any asset work. The
-// boss/elite/weak encounter pool also borrows from Overgrowth as placeholders;
-// the 25 mod normal encounters auto-inject via BaseLib's AddCustomEncounters.
+// vanilla Overgrowth so the wiring can be validated before any asset work. All
+// encounters (weak, normal, elite, boss) come from CustomEncounterModels that
+// IsValidForAct(act is TheContinent), auto-injected by BaseLib's
+// AddCustomEncounters postfix.
 public sealed class TheContinent : CustomActModel, ILocalizationProvider
 {
     public TheContinent() : base(actNumber: 1) { }
@@ -44,24 +45,23 @@ public sealed class TheContinent : CustomActModel, ILocalizationProvider
     protected override BackgroundAssets CustomGenerateBackgroundAssets(Rng rng) =>
         new BackgroundAssets("overgrowth", rng);
 
-    // Empty event pool for the spike — vanilla events would feel out of place in the
-    // alt arc, and we have no custom events yet. BaseLib's AddCustomEvents postfix
+    // Empty event pool for now — vanilla events would feel out of place in the alt
+    // arc, and we have no custom events yet. BaseLib's AddCustomEvents postfix
     // injects per-act CustomEventModels here when we add them later.
     public override IEnumerable<EventModel> AllEvents => Array.Empty<EventModel>();
 
-    // GenerateRooms expects at least one boss/elite/weak encounter per act, otherwise
-    // _rooms.Boss ends up null and AssetPaths crashes during act-asset preload. Bosses
-    // and elites still borrow from vanilla Overgrowth as placeholders — replace them
-    // when authored. The four easy-pool encounters (LancelierFight, PortierFight,
-    // Volesters, Abbests) and the 21 hard-pool *Normal encounters are auto-injected
-    // by BaseLib's AddCustomEncounters postfix on top of this list.
-    public override IEnumerable<EncounterModel> GenerateAllEncounters() => new EncounterModel[]
+    // First-run boss order: players see Lampmaster first since he's our only boss.
+    // ApplyDiscoveryOrderModifications walks this list and assigns the first
+    // unseen entry to _rooms.Boss for the run.
+    public override IEnumerable<EncounterModel> BossDiscoveryOrder => new EncounterModel[]
     {
-        ModelDb.Encounter<VantomBoss>(),
-        ModelDb.Encounter<CeremonialBeastBoss>(),
-        ModelDb.Encounter<TheKinBoss>(),
-        ModelDb.Encounter<BygoneEffigyElite>(),
-        ModelDb.Encounter<ByrdonisElite>(),
-        ModelDb.Encounter<PhrogParasiteElite>(),
+        ModelDb.Encounter<LampmasterBoss>(),
     };
+
+    // No vanilla encounters needed: LampmasterBoss + the three *Elite encounters
+    // + the four easy-pool encounters + the 21 hard-pool *Normal encounters all
+    // auto-inject via BaseLib's postfix on this method (each gates with
+    // IsValidForAct(act is TheContinent)).
+    public override IEnumerable<EncounterModel> GenerateAllEncounters() =>
+        Array.Empty<EncounterModel>();
 }

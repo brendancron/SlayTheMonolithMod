@@ -107,11 +107,15 @@ using SlayTheMonolithMod.SlayTheMonolithModCode.Monsters;
 
 namespace SlayTheMonolithMod.SlayTheMonolithModCode.Encounters;
 
-public sealed class {Cls}Normal : CustomEncounterModel
+public sealed class {Cls}Normal : CustomEncounterModel, ILocalizationProvider
 {{
     public {Cls}Normal() : base(RoomType.Monster) {{ }}
 
     public override bool IsValidForAct(ActModel act) => act is TheContinent;
+
+    public List<(string, string)>? Localization => new EncounterLoc(
+        Title: "{Display}",
+        LossText: "Bested by the {Display}.");
 
     public override IEnumerable<MonsterModel> AllPossibleMonsters => new MonsterModel[]
     {{
@@ -164,7 +168,7 @@ for (cls, disp, move_id, move_lbl, min_hp, max_hp, dmg, sfx) in monsters:
         Cls=cls, lower=lower, MinHp=min_hp, MaxHp=max_hp, Dmg=dmg, Sfx=sfx,
         Display=disp, MoveId=move_id, MoveLabel=move_lbl,
     )
-    enc_src = ENC_TPL.format(Cls=cls)
+    enc_src = ENC_TPL.format(Cls=cls, Display=disp)
     scn_src = SCN_TPL.format(Cls=cls, lower=lower, short=short, uid=uid)
     with open(os.path.join(mons_dir, f'{cls}.cs'), 'w', encoding='utf-8') as f:
         f.write(mon_src)

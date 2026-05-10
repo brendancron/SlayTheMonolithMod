@@ -6,24 +6,24 @@ using SlayTheMonolithMod.SlayTheMonolithModCode.Monsters;
 
 namespace SlayTheMonolithMod.SlayTheMonolithModCode.Encounters;
 
-public sealed class BouchelierNormal : CustomEncounterModel, ILocalizationProvider
+public sealed class UltimateSakapatateElite : CustomEncounterModel, ILocalizationProvider
 {
-    public BouchelierNormal() : base(RoomType.Monster) { }
+    public UltimateSakapatateElite() : base(RoomType.Elite) { }
 
     public override bool IsValidForAct(ActModel act) => act is TheContinent;
 
     public List<(string, string)>? Localization => new EncounterLoc(
-        Title: "Bouchelier",
-        LossText: "Bested by the Bouchelier.");
+        Title: "Ultimate Sakapatate",
+        LossText: "Squished beneath the Sakapatate.");
 
     public override IEnumerable<MonsterModel> AllPossibleMonsters => new MonsterModel[]
     {
-        ModelDb.Monster<Bouchelier>(),
+        ModelDb.Monster<UltimateSakapatate>(),
     };
 
     protected override IReadOnlyList<(MonsterModel, string?)> GenerateMonsters() =>
         new List<(MonsterModel, string?)>
         {
-            (ModelDb.Monster<Bouchelier>().ToMutable(), null),
+            (ModelDb.Monster<UltimateSakapatate>().ToMutable(), null),
         };
 }

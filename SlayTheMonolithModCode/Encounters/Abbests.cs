@@ -6,11 +6,15 @@ using SlayTheMonolithMod.SlayTheMonolithModCode.Monsters;
 
 namespace SlayTheMonolithMod.SlayTheMonolithModCode.Encounters;
 
-public sealed class Abbests : CustomEncounterModel
+public sealed class Abbests : CustomEncounterModel, ILocalizationProvider
 {
     public Abbests() : base(RoomType.Monster) { }
 
     public override bool IsValidForAct(ActModel act) => act is TheContinent;
+
+    public List<(string, string)>? Localization => new EncounterLoc(
+        Title: "Abbests",
+        LossText: "Outmatched by the Abbests' rites.");
 
     public override bool IsWeak => true;
 

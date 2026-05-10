@@ -6,11 +6,15 @@ using SlayTheMonolithMod.SlayTheMonolithModCode.Monsters;
 
 namespace SlayTheMonolithMod.SlayTheMonolithModCode.Encounters;
 
-public sealed class ClairNormal : CustomEncounterModel
+public sealed class ClairNormal : CustomEncounterModel, ILocalizationProvider
 {
     public ClairNormal() : base(RoomType.Monster) { }
 
     public override bool IsValidForAct(ActModel act) => act is TheContinent;
+
+    public List<(string, string)>? Localization => new EncounterLoc(
+        Title: "Clair",
+        LossText: "Bested by the Clair.");
 
     public override IEnumerable<MonsterModel> AllPossibleMonsters => new MonsterModel[]
     {

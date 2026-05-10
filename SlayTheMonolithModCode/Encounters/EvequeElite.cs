@@ -6,24 +6,24 @@ using SlayTheMonolithMod.SlayTheMonolithModCode.Monsters;
 
 namespace SlayTheMonolithMod.SlayTheMonolithModCode.Encounters;
 
-public sealed class BouchelierNormal : CustomEncounterModel, ILocalizationProvider
+public sealed class EvequeElite : CustomEncounterModel, ILocalizationProvider
 {
-    public BouchelierNormal() : base(RoomType.Monster) { }
+    public EvequeElite() : base(RoomType.Elite) { }
 
     public override bool IsValidForAct(ActModel act) => act is TheContinent;
 
     public List<(string, string)>? Localization => new EncounterLoc(
-        Title: "Bouchelier",
-        LossText: "Bested by the Bouchelier.");
+        Title: "Eveque",
+        LossText: "His decree silenced you.");
 
     public override IEnumerable<MonsterModel> AllPossibleMonsters => new MonsterModel[]
     {
-        ModelDb.Monster<Bouchelier>(),
+        ModelDb.Monster<Eveque>(),
     };
 
     protected override IReadOnlyList<(MonsterModel, string?)> GenerateMonsters() =>
         new List<(MonsterModel, string?)>
         {
-            (ModelDb.Monster<Bouchelier>().ToMutable(), null),
+            (ModelDb.Monster<Eveque>().ToMutable(), null),
         };
 }

@@ -6,11 +6,15 @@ using SlayTheMonolithMod.SlayTheMonolithModCode.Monsters;
 
 namespace SlayTheMonolithMod.SlayTheMonolithModCode.Encounters;
 
-public sealed class AberrationNormal : CustomEncounterModel
+public sealed class AberrationNormal : CustomEncounterModel, ILocalizationProvider
 {
     public AberrationNormal() : base(RoomType.Monster) { }
 
     public override bool IsValidForAct(ActModel act) => act is TheContinent;
+
+    public List<(string, string)>? Localization => new EncounterLoc(
+        Title: "Aberration",
+        LossText: "Bested by the Aberration.");
 
     public override IEnumerable<MonsterModel> AllPossibleMonsters => new MonsterModel[]
     {

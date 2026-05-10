@@ -6,11 +6,15 @@ using SlayTheMonolithMod.SlayTheMonolithModCode.Monsters;
 
 namespace SlayTheMonolithMod.SlayTheMonolithModCode.Encounters;
 
-public sealed class LancelierFight : CustomEncounterModel
+public sealed class LancelierFight : CustomEncounterModel, ILocalizationProvider
 {
     public LancelierFight() : base(RoomType.Monster) { }
 
     public override bool IsValidForAct(ActModel act) => act is TheContinent;
+
+    public List<(string, string)>? Localization => new EncounterLoc(
+        Title: "Lancelier",
+        LossText: "Run through by the Lancelier.");
 
     // IsWeak routes the encounter to the early-act slots (NumberOfWeakEncounters,
     // default 3). Engine convention — does not affect the monster's stats.
