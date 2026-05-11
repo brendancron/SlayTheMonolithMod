@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://b1gobluencounter1"]
+
+; Slot positions are in the 1920x1080 encounter Control's local coordinates.
+; NCombatRoom offsets this Control by -(960, 540), so a marker at scene
+; (1440, 740) lands at the same world position as a vanilla auto-placed enemy
+; at local (480, 200). Keeping markers near y=740 matches vanilla enemy height;
+; placing them to the right of x=960 keeps them on the enemy half of the
+; screen (away from the player on the left).
+
+[node name="GobluEliteEncounter" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="flower1" type="Marker2D" parent="."]
+position = Vector2(1080, 740)
+
+[node name="flower2" type="Marker2D" parent="."]
+position = Vector2(1240, 740)
+
+[node name="goblu" type="Marker2D" parent="."]
+position = Vector2(1400, 740)
+
+[node name="flower3" type="Marker2D" parent="."]
+position = Vector2(1560, 740)
+
+[node name="flower4" type="Marker2D" parent="."]
+position = Vector2(1720, 740)

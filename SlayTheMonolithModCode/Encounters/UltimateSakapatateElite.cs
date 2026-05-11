@@ -16,6 +16,8 @@ public sealed class UltimateSakapatateElite : CustomEncounterModel, ILocalizatio
         Title: "Ultimate Sakapatate",
         LossText: "Squished beneath the Sakapatate.");
 
+    public override string CustomBgm => "event:/mods/slaythemonolithmod/ultimate_sakapatate";
+
     public override IEnumerable<MonsterModel> AllPossibleMonsters => new MonsterModel[]
     {
         ModelDb.Monster<UltimateSakapatate>(),

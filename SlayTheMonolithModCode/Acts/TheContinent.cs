@@ -28,11 +28,14 @@ public sealed class TheContinent : CustomActModel, ILocalizationProvider
     protected override string CustomRestSiteBackgroundPath =>
         "res://scenes/rest_site/overgrowth_rest_site.tscn";
 
-    // CustomActModel's base defaults to act-3/Glory audio. Override to act-1/Overgrowth.
+    // Map/normal-combat music is our authored event. Bank path stays at vanilla
+    // act1 because that bank exists at res:// and loads harmlessly; our actual
+    // event lives in slaythemonolithmod.bank (loaded by MainFile.Initialize)
+    // and is played continuously by ContinuousActMusicPatch.
     public override string[] BgMusicOptions =>
-        new[] { "event:/music/act1_a1_v1", "event:/music/act1_a2_v2" };
+        new[] { "event:/mods/slaythemonolithmod/avasha_kapasatara_theme" };
     public override string[] MusicBankPaths =>
-        new[] { "res://banks/desktop/act1_a1.bank", "res://banks/desktop/act1_a2.bank" };
+        new[] { "res://banks/desktop/act1_a1.bank" };
     public override string AmbientSfx => "event:/sfx/ambience/act1_ambience";
     public override string ChestSpineResourcePath =>
         "res://animations/backgrounds/treasure_room/chest_room_act_1_skel_data.tres";

@@ -16,6 +16,8 @@ public sealed class EvequeElite : CustomEncounterModel, ILocalizationProvider
         Title: "Eveque",
         LossText: "His decree silenced you.");
 
+    public override string CustomBgm => "event:/mods/slaythemonolithmod/eveque_elite";
+
     public override IEnumerable<MonsterModel> AllPossibleMonsters => new MonsterModel[]
     {
         ModelDb.Monster<Eveque>(),
