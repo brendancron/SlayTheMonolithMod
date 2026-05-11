@@ -3,18 +3,25 @@ using BaseLib.Utils.NodeFactories;
 using MegaCrit.Sts2.Core.Audio;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.MonsterMoves.Intents;
 using MegaCrit.Sts2.Core.MonsterMoves.MonsterMoveStateMachine;
 using MegaCrit.Sts2.Core.Nodes.Combat;
 
 namespace SlayTheMonolithMod.SlayTheMonolithModCode.Monsters;
 
+// Functionally identical to vanilla VineShambler:
+//   Swipe (6x2) -> GraspingVines (8 + apply Tangled) -> Chomp (16) -> Swipe ...
+//   Initial state = Swipe. 61 HP.
 public sealed class Bruler : CustomMonsterModel, ILocalizationProvider
 {
-    private const string MoveIdConst = "IGNITE_MOVE";
+    private const string GraspingMoveId = "GRASPING_MOVE";
+    private const string SwipeMoveId = "SWIPE_MOVE";
+    private const string ChompMoveId = "CHOMP_MOVE";
 
-    public override int MinInitialHp => 24;
-    public override int MaxInitialHp => 30;
+    public override int MinInitialHp => 61;
+    public override int MaxInitialHp => 61;
 
     public override string CustomVisualPath =>
         "res://SlayTheMonolithMod/scenes/creature_visuals/bruler.tscn";
@@ -30,24 +37,63 @@ public sealed class Bruler : CustomMonsterModel, ILocalizationProvider
 
     public List<(string, string)>? Localization => new MonsterLoc(
         Name: "Bruler",
-        MoveTitles: new[] { (MoveIdConst, "Ignite") });
+        MoveTitles: new[]
+        {
+            (GraspingMoveId, "Grasping"),
+            (SwipeMoveId, "Swipe"),
+            (ChompMoveId, "Chomp"),
+        });
 
-    private int MoveDamage => 7;
+    private int GraspingDamage => 8;
+    private int SwipeDamage => 6;
+    private int SwipeRepeat => 2;
+    private int ChompDamage => 16;
 
     protected override MonsterMoveStateMachine GenerateMoveStateMachine()
     {
-        var move = new MoveState(MoveIdConst, DoMove, new SingleAttackIntent(MoveDamage));
-        move.FollowUpState = move;
-        return new MonsterMoveStateMachine(new List<MonsterState> { move }, move);
+        var grasping = new MoveState(GraspingMoveId, GraspingMove, new SingleAttackIntent(GraspingDamage), new CardDebuffIntent());
+        var swipe = new MoveState(SwipeMoveId, SwipeMove, new MultiAttackIntent(SwipeDamage, SwipeRepeat));
+        var chomp = new MoveState(ChompMoveId, ChompMove, new SingleAttackIntent(ChompDamage));
+
+        swipe.FollowUpState = grasping;
+        grasping.FollowUpState = chomp;
+        chomp.FollowUpState = swipe;
+
+        return new MonsterMoveStateMachine(
+            new List<MonsterState> { grasping, swipe, chomp },
+            swipe);
     }
 
-    private async Task DoMove(IReadOnlyList<Creature> targets)
+    private async Task GraspingMove(IReadOnlyList<Creature> targets)
     {
-        await DamageCmd.Attack(MoveDamage)
+        await DamageCmd.Attack(GraspingDamage)
             .FromMonster(this)
-            .WithAttackerAnim("Attack", 0.15f)
+            .WithAttackerAnim("Cast", 0.5f)
             .WithAttackerFx(null, AttackSfx)
             .WithHitFx("vfx/vfx_attack_slash")
+            .Execute(null);
+        await PowerCmd.Apply<TangledPower>(new ThrowingPlayerChoiceContext(), targets, 1m, base.Creature, null);
+    }
+
+    private async Task SwipeMove(IReadOnlyList<Creature> targets)
+    {
+        await DamageCmd.Attack(SwipeDamage)
+            .WithHitCount(SwipeRepeat)
+            .FromMonster(this)
+            .OnlyPlayAnimOnce()
+            .WithAttackerAnim("Attack", 0.4f)
+            .WithAttackerFx(null, AttackSfx)
+            .WithHitFx("vfx/vfx_scratch")
+            .Execute(null);
+    }
+
+    private async Task ChompMove(IReadOnlyList<Creature> targets)
+    {
+        await DamageCmd.Attack(ChompDamage)
+            .FromMonster(this)
+            .WithAttackerAnim("Attack", 0.4f)
+            .WithAttackerFx(null, AttackSfx)
+            .WithHitFx("vfx/vfx_bite")
             .Execute(null);
     }
 }

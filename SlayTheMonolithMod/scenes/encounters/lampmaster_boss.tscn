@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://b1lampmsterenc01"]
+
+; Five slots laid out horizontally: Lampmaster in the middle, 4 lamp slots
+; flanking. Coordinate space matches what NCombatRoom expects (it offsets the
+; Control by -(960, 540), so y=740 puts creatures at vanilla enemy height and
+; x>960 keeps them on the enemy side of the screen).
+
+[node name="LampmasterBossEncounter" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="lamp1" type="Marker2D" parent="."]
+position = Vector2(1080, 740)
+
+[node name="lamp2" type="Marker2D" parent="."]
+position = Vector2(1240, 740)
+
+[node name="lampmaster" type="Marker2D" parent="."]
+position = Vector2(1400, 740)
+
+[node name="lamp3" type="Marker2D" parent="."]
+position = Vector2(1560, 740)
+
+[node name="lamp4" type="Marker2D" parent="."]
+position = Vector2(1720, 740)

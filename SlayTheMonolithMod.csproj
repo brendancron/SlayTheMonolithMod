@@ -71,6 +71,23 @@
         <Copy SourceFiles="$(AssemblyName).json" DestinationFolder="$(ModsPath)$(MSBuildProjectName)/" />
     </Target>
 
+    <!-- Pulls fresh FMOD banks from fmod_project/Build/desktop into audio/
+         before the audio sync. F7 in FMOD Studio writes there, but the build
+         flow never auto-copied to audio/, so the deployed bank silently
+         lagged the latest FMOD edit. SkipUnchangedFiles makes this a no-op
+         when the banks are already current. -->
+    <Target Name="SyncFmodBanksToAudio"
+            BeforeTargets="CopyAudioToModsFolder"
+            Condition="Exists('fmod_project/Build/desktop/slaythemonolithmod.bank')">
+        <ItemGroup>
+            <FmodBanks Include="fmod_project/Build/desktop/slaythemonolithmod.bank;fmod_project/Build/desktop/slaythemonolithmod.strings.bank" />
+        </ItemGroup>
+        <Message Text="Syncing FMOD banks from Build/desktop to audio/" Importance="high" />
+        <Copy SourceFiles="@(FmodBanks)"
+              DestinationFolder="audio/"
+              SkipUnchangedFiles="true" />
+    </Target>
+
     <!-- Audio files live as loose files alongside the .dll because BaseLib's
          FmodAudio.PlayMusic streams from absolute file paths, not res://. -->
     <Target Name="CopyAudioToModsFolder" AfterTargets="PostBuildEvent" Condition="Exists('audio')">

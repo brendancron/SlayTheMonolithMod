@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1gscultist00001"]
+
+[ext_resource type="Texture2D" path="res://SlayTheMonolithMod/images/great_sword_cultist.png" id="1_gscultist"]
+
+[node name="GreatSwordCultist" type="Node2D"]
+
+[node name="Visuals" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+texture = ExtResource("1_gscultist")
+offset = Vector2(0, -150)
+
+[node name="Bounds" type="Control" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 300)
+offset_left = -60.0
+offset_top = -300.0
+offset_right = 60.0
+offset_bottom = 0.0
+
+[node name="IntentPos" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -340)
+
+[node name="CenterPos" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -150)

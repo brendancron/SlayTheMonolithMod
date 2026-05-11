@@ -33,9 +33,19 @@ public sealed class TheContinent : CustomActModel, ILocalizationProvider
     // event lives in slaythemonolithmod.bank (loaded by MainFile.Initialize)
     // and is played continuously by ContinuousActMusicPatch.
     public override string[] BgMusicOptions =>
-        new[] { "event:/mods/slaythemonolithmod/avasha_kapasatara_theme" };
+        new[] {
+            "event:/mods/slaythemonolithmod/lumiere_theme",
+            "event:/mods/slaythemonolithmod/linen_and_cotton_theme",
+            "event:/mods/slaythemonolithmod/avasha_kapasatara_theme"
+        };
+
     public override string[] MusicBankPaths =>
-        new[] { "res://banks/desktop/act1_a1.bank" };
+        new[] {
+            "res://banks/desktop/act1_a1.bank",
+            "res://banks/desktop/act1_a1.bank",
+            "res://banks/desktop/act1_a1.bank"
+        };
+
     public override string AmbientSfx => "event:/sfx/ambience/act1_ambience";
     public override string ChestSpineResourcePath =>
         "res://animations/backgrounds/treasure_room/chest_room_act_1_skel_data.tres";

@@ -9,18 +9,21 @@ using MegaCrit.Sts2.Core.MonsterMoves;
 using MegaCrit.Sts2.Core.MonsterMoves.Intents;
 using MegaCrit.Sts2.Core.MonsterMoves.MonsterMoveStateMachine;
 using MegaCrit.Sts2.Core.Nodes.Combat;
-using MegaCrit.Sts2.Core.ValueProps;
 
 namespace SlayTheMonolithMod.SlayTheMonolithModCode.Monsters;
 
+// Functionally identical to vanilla SludgeSpinner.
+//   OilSpray (8 + Weak 1) / Slam (11) / Rage (6 + self Strength 3) random
+//   branch with CannotRepeat. Initial state = OilSpray. 37 HP. Rage hidden
+//   from bestiary, matching vanilla.
 public sealed class Abbest : CustomMonsterModel, ILocalizationProvider
 {
-    private const string TomeStrikeMoveId = "TOME_STRIKE_MOVE";
-    private const string HexMoveId = "HEX_MOVE";
-    private const string LitanyMoveId = "LITANY_MOVE";
+    private const string OilSprayMoveId = "OIL_SPRAY_MOVE";
+    private const string SlamMoveId = "SLAM_MOVE";
+    private const string RageMoveId = "RAGE_MOVE";
 
-    public override int MinInitialHp => 22;
-    public override int MaxInitialHp => 28;
+    public override int MinInitialHp => 37;
+    public override int MaxInitialHp => 37;
 
     public override string CustomVisualPath =>
         "res://SlayTheMonolithMod/scenes/creature_visuals/abbest.tscn";
@@ -32,57 +35,74 @@ public sealed class Abbest : CustomMonsterModel, ILocalizationProvider
 
     public override string CustomAttackSfx => "event:/sfx/enemy/enemy_attacks/axebot/axebot_attack_spin";
 
-    public override DamageSfxType TakeDamageSfxType => DamageSfxType.Magic;
+    public override DamageSfxType TakeDamageSfxType => DamageSfxType.Stone;
 
     public List<(string, string)>? Localization => new MonsterLoc(
         Name: "Abbest",
         MoveTitles: new[]
         {
-            (TomeStrikeMoveId, "Tome Strike"),
-            (HexMoveId, "Hex"),
-            (LitanyMoveId, "Litany"),
+            (OilSprayMoveId, "Oil Spray"),
+            (SlamMoveId, "Slam"),
+            (RageMoveId, "Rage"),
         });
 
-    private int TomeStrikeDamage => 7;
-    private int HexVulnerable => 2;
-    private int LitanyBlock => 4;
+    private int OilSprayDamage => 8;
+    private int OilSprayWeak => 1;
+    private int SlamDamage => 11;
+    private int RageDamage => 6;
+    private int RageStrength => 3;
 
     protected override MonsterMoveStateMachine GenerateMoveStateMachine()
     {
-        var tome = new MoveState(TomeStrikeMoveId, TomeStrikeMove, new SingleAttackIntent(TomeStrikeDamage));
-        var hex = new MoveState(HexMoveId, HexMove, new DebuffIntent());
-        var litany = new MoveState(LitanyMoveId, LitanyMove, new DefendIntent());
-        var rand = new RandomBranchState("ABBEST_RAND");
-        tome.FollowUpState = rand;
-        hex.FollowUpState = rand;
-        litany.FollowUpState = rand;
-        rand.AddBranch(tome, MoveRepeatType.CannotRepeat, 1f);
-        rand.AddBranch(hex, MoveRepeatType.CannotRepeat, 1f);
-        rand.AddBranch(litany, MoveRepeatType.CannotRepeat, 1f);
+        var oilSpray = new MoveState(OilSprayMoveId, OilSprayMove, new SingleAttackIntent(OilSprayDamage), new DebuffIntent());
+        var slam = new MoveState(SlamMoveId, SlamMove, new SingleAttackIntent(SlamDamage));
+        var rage = new MoveState(RageMoveId, RageMove, new SingleAttackIntent(RageDamage), new BuffIntent());
+
+        var rand = new RandomBranchState("RAND");
+        oilSpray.FollowUpState = rand;
+        slam.FollowUpState = rand;
+        rage.FollowUpState = rand;
+        rand.AddBranch(oilSpray, MoveRepeatType.CannotRepeat);
+        rand.AddBranch(slam, MoveRepeatType.CannotRepeat);
+        rand.AddBranch(rage, MoveRepeatType.CannotRepeat);
+
         return new MonsterMoveStateMachine(
-            new List<MonsterState> { tome, hex, litany, rand },
-            tome);
+            new List<MonsterState> { rand, oilSpray, slam, rage },
+            oilSpray);
     }
 
-    private async Task TomeStrikeMove(IReadOnlyList<Creature> targets)
+    private async Task OilSprayMove(IReadOnlyList<Creature> targets)
     {
-        await DamageCmd.Attack(TomeStrikeDamage)
+        await DamageCmd.Attack(OilSprayDamage)
+            .FromMonster(this)
+            .WithAttackerAnim("Cast", 0.5f)
+            .WithAttackerFx(null, AttackSfx)
+            .WithHitFx("vfx/vfx_attack_blunt")
+            .Execute(null);
+        await PowerCmd.Apply<WeakPower>(new ThrowingPlayerChoiceContext(), targets, OilSprayWeak, base.Creature, null);
+    }
+
+    private async Task SlamMove(IReadOnlyList<Creature> targets)
+    {
+        await DamageCmd.Attack(SlamDamage)
             .FromMonster(this)
             .WithAttackerAnim("Attack", 0.15f)
             .WithAttackerFx(null, AttackSfx)
-            .WithHitFx("vfx/vfx_attack_slash")
+            .WithHitFx("vfx/vfx_attack_blunt")
             .Execute(null);
     }
 
-    private async Task HexMove(IReadOnlyList<Creature> targets)
+    private async Task RageMove(IReadOnlyList<Creature> targets)
     {
-        await CreatureCmd.TriggerAnim(base.Creature, "Cast", 0.5f);
-        await PowerCmd.Apply<VulnerablePower>(new ThrowingPlayerChoiceContext(), targets, HexVulnerable, base.Creature, null);
+        await DamageCmd.Attack(RageDamage)
+            .FromMonster(this)
+            .WithAttackerAnim("Attack", 0.5f)
+            .WithAttackerFx(null, AttackSfx)
+            .WithHitFx("vfx/vfx_attack_blunt")
+            .Execute(null);
+        await PowerCmd.Apply<StrengthPower>(new ThrowingPlayerChoiceContext(), base.Creature, RageStrength, base.Creature, null);
     }
 
-    private async Task LitanyMove(IReadOnlyList<Creature> targets)
-    {
-        await CreatureCmd.TriggerAnim(base.Creature, "Cast", 0.5f);
-        await CreatureCmd.GainBlock(base.Creature, LitanyBlock, ValueProp.Move, null);
-    }
+    protected override bool ShouldShowMoveInBestiary(string moveStateId) =>
+        moveStateId != RageMoveId;
 }
