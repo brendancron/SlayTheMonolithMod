@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1dualliste00000"]
+
+[ext_resource type="Texture2D" path="res://SlayTheMonolithMod/images/dualliste.png" id="1_duall"]
+
+[node name="Dualliste" type="Node2D"]
+
+[node name="Visuals" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+texture = ExtResource("1_duall")
+offset = Vector2(0, -140)
+
+[node name="Bounds" type="Control" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 280)
+offset_left = -80.0
+offset_top = -280.0
+offset_right = 80.0
+offset_bottom = 0.0
+
+[node name="IntentPos" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -320)
+
+[node name="CenterPos" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -140)

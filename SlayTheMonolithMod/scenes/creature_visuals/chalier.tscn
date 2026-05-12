@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1chalier000000000"]
+
+[ext_resource type="Texture2D" path="res://SlayTheMonolithMod/images/chalier.png" id="1_chali"]
+
+[node name="Chalier" type="Node2D"]
+
+[node name="Visuals" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+texture = ExtResource("1_chali")
+offset = Vector2(0, -100)
+
+[node name="Bounds" type="Control" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 200)
+offset_left = -50.0
+offset_top = -200.0
+offset_right = 50.0
+offset_bottom = 0.0
+
+[node name="IntentPos" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -240)
+
+[node name="CenterPos" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -100)
