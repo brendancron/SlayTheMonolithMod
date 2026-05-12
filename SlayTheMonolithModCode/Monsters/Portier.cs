@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.MonsterMoves.Intents;
 using MegaCrit.Sts2.Core.MonsterMoves.MonsterMoveStateMachine;
 using MegaCrit.Sts2.Core.Nodes.Combat;
+using SlayTheMonolithMod.SlayTheMonolithModCode.Intents;
 
 namespace SlayTheMonolithMod.SlayTheMonolithModCode.Monsters;
 
@@ -50,7 +51,7 @@ public sealed class Portier : CustomMonsterModel, ILocalizationProvider
     protected override MonsterMoveStateMachine GenerateMoveStateMachine()
     {
         var charge = new MoveState(ChargeMoveId, ChargeMove, new BuffIntent());
-        var jump = new MoveState(JumpMoveId, JumpMove, new SingleAttackIntent(JumpDamage), new DebuffIntent(strong: true));
+        var jump = new MoveState(JumpMoveId, JumpMove, new SingleAttackIntent(JumpDamage), new ConditionalDebuffIntent(strong: true));
         charge.FollowUpState = jump;
         jump.FollowUpState = charge;
         return new MonsterMoveStateMachine(new List<MonsterState> { charge, jump }, charge);

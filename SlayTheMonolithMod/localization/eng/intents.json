@@ -1,0 +1,4 @@
+{
+  "MOD_CONDITIONAL_DEBUFF.title": "Conditional Debuff",
+  "MOD_CONDITIONAL_DEBUFF.description": "This enemy will apply a debuff, but only if its attack deals unblocked damage."
+}

@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.MonsterMoves;
 using MegaCrit.Sts2.Core.MonsterMoves.Intents;
 using MegaCrit.Sts2.Core.MonsterMoves.MonsterMoveStateMachine;
 using MegaCrit.Sts2.Core.Nodes.Combat;
+using SlayTheMonolithMod.SlayTheMonolithModCode.Intents;
 using SlayTheMonolithMod.SlayTheMonolithModCode.Powers;
 
 namespace SlayTheMonolithMod.SlayTheMonolithModCode.Monsters;
@@ -85,7 +86,7 @@ public sealed class Lampmaster : CustomMonsterModel, ILocalizationProvider
     {
         var ritual = new MoveState(RitualMoveId, RitualMove, new MultiAttackIntent(RitualDamage, RitualHits), new SummonIntent());
         var sword = new MoveState(SwordMoveId, SwordMove, new SingleAttackIntent(SwordDamage));
-        var darkExplosion = new MoveState(DarkExplosionMoveId, DarkExplosionMove, new SingleAttackIntent(DarkExplosionDamage), new DebuffIntent());
+        var darkExplosion = new MoveState(DarkExplosionMoveId, DarkExplosionMove, new SingleAttackIntent(DarkExplosionDamage), new ConditionalDebuffIntent());
 
         ritual.FollowUpState = sword;
         sword.FollowUpState = darkExplosion;
